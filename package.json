@@ -1,0 +1,47 @@
+{
+  "name": "slack-clone-server-new",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/craigstroman/slack-clone-server-new.git"
+  },
+  "scripts": {
+    "live:server": "nodemon ./index.js  --exec babel-node  ./index.js"
+  },
+  "author": "Craig Stroman",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@babel/cli": "^7.28.0",
+    "@babel/core": "^7.28.0",
+    "@babel/node": "^7.28.0",
+    "@babel/plugin-transform-async-to-generator": "^7.27.1",
+    "@babel/plugin-transform-modules-commonjs": "^7.27.1",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.28.0",
+    "dotenv": "^17.1.0",
+    "nodemon": "^3.1.4",
+    "prettier": "^3.6.2"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.12.2",
+    "@as-integrations/express5": "^1.1.1",
+    "@graphql-tools/load-files": "^7.0.1",
+    "@graphql-tools/merge": "^9.0.24",
+    "@graphql-tools/schema": "^10.0.23",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "graphql": "^16.11.0",
+    "http": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
+    "pg": "^8.16.3",
+    "pg-hstore": "^2.3.4",
+    "pug": "^3.0.3",
+    "sequelize": "^6.37.7",
+    "shortid": "^2.2.17"
+  }
+}
