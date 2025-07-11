@@ -1,11 +1,17 @@
+import path from 'path';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express5';
+import { fileURLToPath } from 'url';
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import { sequelize } from './database.js';
 import { resolvers } from './resolvers/index.js';
 import { schemaArray } from './schema/index.js';
+import { router } from './routes/index.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -20,6 +26,17 @@ await server.start();
 
 const port = process.env.PORT;
 app.set('port', port);
+
+app.set('views', path.join(__dirname, './views'));
+app.set('view engine', 'pug');
+
+app.use('/static', express.static('public'));
+
+app.locals.title = 'Slack Clone';
+app.locals.content = 'A Slack clone using Express, GarphQL, and React.';
+// app.locals.reactApp = reactApp;
+app.locals.env = process.env;
+app.use(router);
 
 app.use(
   '/',
