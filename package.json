@@ -9,7 +9,7 @@
     "url": "git+https://github.com/craigstroman/slack-clone-server-new.git"
   },
   "scripts": {
-    "live:server": "nodemon ./index.js  --exec babel-node  ./index.js"
+    "live:server": "NODE_ENV=development nodemon ./index.js  --exec babel-node  ./index.js"
   },
   "author": "Craig Stroman",
   "license": "ISC",
