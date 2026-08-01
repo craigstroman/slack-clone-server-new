@@ -1,0 +1,15 @@
+subscription WatchCounter {
+  counterUpdated
+}
+
+mutation IncrementCounter {
+  incrementCounter
+}
+
+mutation ResetCounter {
+  resetCounter
+}
+
+query hello {
+  hello
+}
