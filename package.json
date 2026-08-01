@@ -4,6 +4,7 @@
   "description": "A clone of Slack using GraphQL.",
   "repository": "https://github.com/craigstroman/slack-clone-server.git",
   "main": "src/index.ts",
+  "type": "commonjs",
   "scripts": {
     "watch": "tsc -w --preserveWatchOutput & copyfiles -f ./src/views/*.pug ./dist/views",
     "start": "NODE_ENV=production node ./dist/index.js",
