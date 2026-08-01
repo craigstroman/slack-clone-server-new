@@ -1,6 +1,6 @@
 import { Resolver, Subscription, Root, Mutation, Int } from 'type-graphql';
 
-import { COUNTER_UPDATED, iCounterPayload, pubSub } from '../pubsub.js';
+import { COUNTER_UPDATED, iCounterPayload, pubSub } from '../pubsub';
 
 let counter = 0;
 
