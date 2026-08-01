@@ -1,8 +1,8 @@
 {
-  "name": "slack-clone-server",
+  "name": "counter-subscriptions",
   "version": "1.0.0",
-  "description": "A clone of Slack using GraphQL.",
-  "repository": "https://github.com/craigstroman/slack-clone-server.git",
+  "description": "A basic counter with subscriptions",
+  "repository": "https://github.com/craigstroman/counter-subscriptions.git",
   "main": "src/index.ts",
   "type": "commonjs",
   "scripts": {
