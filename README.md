@@ -1,3 +1,3 @@
-## Slack Clone
+## Counter Subscriptions
 
-Right now I am just getting started creating this so I created a simple counter with a watch subscription just to test subscriptions with the new Apollo server.
+A basic counter subscription using GraphQL.
