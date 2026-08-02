@@ -18,7 +18,6 @@ import { createPubSub } from '@graphql-yoga/subscription';
 
 import { AppDataSource } from './database';
 
-import { CounterResolver } from './resolvers/CounterResolver';
 import { HelloResolver } from './resolvers/Hello';
 
 const pubSub = createPubSub();
@@ -28,7 +27,7 @@ async function main(): Promise<void> {
   await AppDataSource.initialize();
 
   const schema = await buildSchema({
-    resolvers: [CounterResolver, HelloResolver],
+    resolvers: [HelloResolver],
     pubSub,
     validate: false,
   });
