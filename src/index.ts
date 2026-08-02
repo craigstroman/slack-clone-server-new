@@ -16,13 +16,16 @@ import { buildSchema } from 'type-graphql';
 
 import { createPubSub } from '@graphql-yoga/subscription';
 
+import { AppDataSource } from './database';
+
 import { CounterResolver } from './resolvers/CounterResolver';
 import { HelloResolver } from './resolvers/Hello';
 
 const pubSub = createPubSub();
+const port = 9001;
 
 async function main(): Promise<void> {
-  const port = 9001;
+  await AppDataSource.initialize();
 
   const schema = await buildSchema({
     resolvers: [CounterResolver, HelloResolver],
