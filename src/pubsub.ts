@@ -1,11 +1,13 @@
 import { createPubSub } from '@graphql-yoga/subscription';
 
+import type { ChatMessage } from './entities/CHATMESSAGE';
+
 export interface iCounterPayload {
   counterUpdated: number;
 }
 
-export const COUNTER_UPDATED = 'COUNTER_UPDATED';
+export const MESSAGE_SENT = 'MESSAGE_SENT' as const;
 
 export const pubSub = createPubSub<{
-  COUNTER_UPDATED: [payload: iCounterPayload];
+  MESSAGE_SENT: [payload: ChatMessage];
 }>();
