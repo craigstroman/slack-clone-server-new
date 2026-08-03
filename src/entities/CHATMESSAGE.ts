@@ -17,7 +17,7 @@ export class ChatMessage extends BaseEntity {
 
   @Field()
   @Column()
-  roomId: string;
+  roomId: number;
 
   @Field()
   @Column()
