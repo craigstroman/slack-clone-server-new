@@ -19,6 +19,8 @@ import { createPubSub } from '@graphql-yoga/subscription';
 import { AppDataSource } from './database';
 
 import { HelloResolver } from './resolvers/Hello';
+import { ChatMessageResolver } from './resolvers/ChatMessageResolver';
+import { ChatRoomResolver } from './resolvers/ChatRoomResolver';
 
 const pubSub = createPubSub();
 const port = 9001;
@@ -27,7 +29,7 @@ async function main(): Promise<void> {
   await AppDataSource.initialize();
 
   const schema = await buildSchema({
-    resolvers: [HelloResolver],
+    resolvers: [HelloResolver, ChatMessageResolver, ChatRoomResolver],
     pubSub,
     validate: false,
   });
