@@ -7,8 +7,6 @@ import { SendMessageInput } from '../inputs/SendMessageInput';
 import { MESSAGE_SENT } from '../pubsub';
 import { pubSub } from '../pubsub';
 
-// TODO: Continue correcting errors with the chat message resolver and continue looking at my last question with ChatGPT
-
 @Resolver(() => ChatMessage)
 export class ChatMessageResolver {
   @Query(() => [ChatMessage])
@@ -63,6 +61,8 @@ export class ChatMessageResolver {
 
     const savedMessage: ChatMessage = await messageRepository.save(message);
 
+    console.log('2. Publishing topic:', MESSAGE_SENT);
+
     await pubSub.publish(MESSAGE_SENT, savedMessage);
 
     return savedMessage;
@@ -80,7 +80,14 @@ export class ChatMessageResolver {
         roomId: number;
       };
     }): boolean => {
-      return payload.roomId === args.roomId;
+      console.log('4. Filter received payload:', payload);
+      console.log('5. Filter received arguments:', args);
+
+      const matches = Number(payload.roomId) === Number(args.roomId);
+
+      console.log('6. Filter result:', matches);
+
+      return matches;
     },
   })
   messageSent(
@@ -90,6 +97,8 @@ export class ChatMessageResolver {
     @Arg('roomId', () => ID)
     _roomId: string,
   ): ChatMessage {
+    console.log('Subscription message:', message);
+    console.log('Subscription arguments:', _roomId);
     return message;
   }
 }
