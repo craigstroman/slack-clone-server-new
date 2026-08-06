@@ -1,3 +1,38 @@
 query hello {
   hello
 }
+
+query GetChatRooms {
+  chatRooms {
+    id
+    name
+  }
+}
+
+mutation CreateChatRoom {
+  createChatRoom(name: "Test Chat Room") {
+    id
+    name
+    createdAt
+  }
+}
+
+mutation SendChatMessage {
+  sendMessage(input: { roomId: 1, username: "M", text: "Testing the chat subscription" }) {
+    id
+    roomId
+    username
+    text
+    createdAt
+  }
+}
+
+subscription WatchChatMessages {
+  messageSent(roomId: 1) {
+    id
+    roomId
+    username
+    text
+    createdAt
+  }
+}
