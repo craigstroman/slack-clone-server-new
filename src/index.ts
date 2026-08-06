@@ -14,15 +14,13 @@ import { useServer } from 'graphql-ws/use/ws';
 
 import { buildSchema } from 'type-graphql';
 
-import { createPubSub } from '@graphql-yoga/subscription';
-
 import { AppDataSource } from './database';
 
 import { HelloResolver } from './resolvers/Hello';
 import { ChatMessageResolver } from './resolvers/ChatMessageResolver';
 import { ChatRoomResolver } from './resolvers/ChatRoomResolver';
+import { pubSub } from './pubsub';
 
-const pubSub = createPubSub();
 const port = 9001;
 
 async function main(): Promise<void> {
@@ -53,12 +51,25 @@ async function main(): Promise<void> {
         console.log('WebSocket client connected');
       },
 
-      onSubscribe: (_context, messageId) => {
-        console.log('Subscription requested:', messageId);
+      onSubscribe: (_context, payload) => {
+        console.log('Subscription started:');
+        console.log('payload: ', payload);
       },
 
       onDisconnect: () => {
         console.log('WebSocket client disconnected');
+      },
+
+      onError(_context, id, _payload, errors) {
+        console.error('Subscription execution error:', {
+          id,
+          errors: errors.map((error) => ({
+            message: error.message,
+            path: error.path,
+            locations: error.locations,
+            stack: error.originalError?.stack,
+          })),
+        });
       },
     },
     wsServer,
