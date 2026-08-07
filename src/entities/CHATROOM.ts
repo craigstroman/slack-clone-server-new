@@ -28,6 +28,10 @@ export class ChatRoom extends BaseEntity {
   @Column()
   name: string;
 
+  @Field()
+  @Column()
+  user_id: number;
+
   @Field(() => [ChatMessage])
   @OneToMany(() => ChatMessage, (message) => message.roomId)
   messages: ChatMessage[];
