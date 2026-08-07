@@ -31,6 +31,7 @@ export class ChatMessageResolver {
   ): Promise<ChatMessage> {
     const username = input.username.trim();
     const text = input.text.trim();
+    const user_id = input.user_id;
 
     if (!username) {
       throw new Error('A username is required.');
@@ -57,6 +58,7 @@ export class ChatMessageResolver {
       room,
       username,
       text,
+      user_id,
     });
 
     const savedMessage: ChatMessage = await messageRepository.save(message);
