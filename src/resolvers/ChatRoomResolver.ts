@@ -48,8 +48,11 @@ export class ChatRoomResolver {
       throw new Error(`A chat room named "${trimmedName}" already exists.`);
     }
 
+    //TODO: Change this to the session user id once I create that.
+
     const room = roomRepository.create({
       name: trimmedName,
+      user_id: 1,
     });
 
     return roomRepository.save(room);
