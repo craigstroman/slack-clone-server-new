@@ -31,6 +31,8 @@ export class ChatRoomResolver {
   async createChatRoom(
     @Arg('name')
     name: string,
+    @Arg('user_id')
+    user_id: number,
   ): Promise<ChatRoom> {
     const trimmedName = name.trim();
 
@@ -52,7 +54,7 @@ export class ChatRoomResolver {
 
     const room = roomRepository.create({
       name: trimmedName,
-      user_id: 1,
+      user_id,
     });
 
     return roomRepository.save(room);
