@@ -10,10 +10,11 @@ query GetChatRooms {
 }
 
 mutation CreateChatRoom {
-  createChatRoom(name: "Test Chat Room") {
+  createChatRoom(name: "Test Chat Room", user_id: 1) {
     id
     name
     createdAt
+    user_id
   }
 }
 
