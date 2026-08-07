@@ -19,12 +19,13 @@ mutation CreateChatRoom {
 }
 
 mutation SendChatMessage {
-  sendMessage(input: { roomId: 1, username: "M", text: "Testing the chat subscription" }) {
+  sendMessage(input: { roomId: 1, username: "M", text: "Testing the chat subscription", user_id: 1 }) {
     id
     roomId
     username
     text
     createdAt
+    user_id
   }
 }
 
