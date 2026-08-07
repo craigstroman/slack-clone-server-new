@@ -25,6 +25,10 @@ export class ChatMessage extends BaseEntity {
 
   @Field()
   @Column()
+  user_id: number;
+
+  @Field()
+  @Column()
   text: string;
 
   @Field(() => String)
