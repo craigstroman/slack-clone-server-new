@@ -2,6 +2,28 @@ query hello {
   hello
 }
 
+mutation {
+  login(usernameOrEmail: "cstroman@gmail.com", password: "testDome12!") {
+    errors {
+      field
+      message
+    }
+    user {
+      id
+      email
+      first_name
+      last_name
+    }
+  }
+}
+
+query {
+  me {
+    id
+    username
+  }
+}
+
 query GetChatRooms {
   chatRooms {
     id
