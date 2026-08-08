@@ -14,11 +14,16 @@ import { useServer } from 'graphql-ws/use/ws';
 
 import { buildSchema } from 'type-graphql';
 
+import session from 'express-session';
+import Redis from 'ioredis';
+import connectRedis from 'connect-redis';
+
 import { AppDataSource } from './database';
 
 import { HelloResolver } from './resolvers/Hello';
 import { ChatMessageResolver } from './resolvers/ChatMessageResolver';
 import { ChatRoomResolver } from './resolvers/ChatRoomResolver';
+import { UserResolver } from './resolvers/UserResolver';
 import { pubSub } from './pubsub';
 
 const port = 9001;
@@ -26,8 +31,12 @@ const port = 9001;
 async function main(): Promise<void> {
   await AppDataSource.initialize();
 
+  const redis = new Redis();
+  const RedisStore = connectRedis(session);
+  const secret: string = process.env.SECRET || '';
+
   const schema = await buildSchema({
-    resolvers: [HelloResolver, ChatMessageResolver, ChatRoomResolver],
+    resolvers: [HelloResolver, ChatMessageResolver, ChatRoomResolver, UserResolver],
     pubSub,
     validate: false,
   });
@@ -103,7 +112,38 @@ async function main(): Promise<void> {
 
   await apolloServer.start();
 
-  app.use('/graphql', cors<cors.CorsRequest>(), express.json(), expressMiddleware(apolloServer));
+  app.use(
+    session({
+      name: 'uid',
+      store: new RedisStore({
+        client: redis,
+        disableTouch: true,
+      }),
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
+        httpOnly: false,
+        sameSite: 'lax',
+        secure: false,
+      },
+      saveUninitialized: true,
+      secret: secret,
+      resave: false,
+    }),
+  );
+
+  app.use(
+    '/graphql',
+    cors<cors.CorsRequest>(),
+    express.json(),
+    expressMiddleware(apolloServer, {
+      context: async ({ req, res }) => ({
+        req,
+        res,
+      }),
+    }),
+  );
+
+  app.set('trust proxy', 1);
 
   // Use httpServer.listen(), not app.listen().
   httpServer.listen(port, () => {
