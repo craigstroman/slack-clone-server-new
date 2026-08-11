@@ -1,4 +1,4 @@
-import { Arg, ID, Mutation, Query, Resolver, Root, Subscription } from 'type-graphql';
+import { Arg, ID, Mutation, Query, Resolver, Root, Subscription, Authorized } from 'type-graphql';
 
 import { AppDataSource } from '../database.js';
 import { ChatMessage } from '../entities/CHATMESSAGE';
@@ -9,6 +9,7 @@ import { pubSub } from '../pubsub';
 
 @Resolver(() => ChatMessage)
 export class ChatMessageResolver {
+  @Authorized()
   @Query(() => [ChatMessage])
   async messages(
     @Arg('roomId', () => ID)
@@ -24,6 +25,7 @@ export class ChatMessageResolver {
     });
   }
 
+  @Authorized()
   @Mutation(() => ChatMessage)
   async sendMessage(
     @Arg('input', () => SendMessageInput)
@@ -69,7 +71,7 @@ export class ChatMessageResolver {
 
     return savedMessage;
   }
-
+  @Authorized()
   @Subscription(() => ChatMessage, {
     topics: MESSAGE_SENT,
 
