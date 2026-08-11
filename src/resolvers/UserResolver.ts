@@ -9,6 +9,7 @@ import {
   FieldResolver,
   Root,
   Query,
+  Authorized,
 } from 'type-graphql';
 import { v4 } from 'uuid';
 import argon2 from 'argon2';
@@ -53,6 +54,7 @@ class UserResponse {
 
 @Resolver(User)
 export class UserResolver {
+  @Authorized()
   @FieldResolver(() => String)
   email(@Root() user: User, @Ctx() { req }: MyContext) {
     // this is the current user and its ok to show them their own email
@@ -62,12 +64,16 @@ export class UserResolver {
     // current user wants to see someone elses email
     return '';
   }
+  @Authorized()
   @Query(() => User)
   async me(@Ctx() { req }: MyContext) {
     // You are not logged in
     if (!req.session.userId) {
       return null;
     }
+
+    console.log('SESSION:', req.session);
+    console.log('USER ID:', req.session.userId);
 
     const id = req.session.userId;
 
@@ -76,6 +82,7 @@ export class UserResolver {
     return user;
   }
 
+  @Authorized()
   @Mutation(() => UserResponse)
   async register(
     @Arg('options') options: UsernameRegisterInput,
@@ -137,9 +144,74 @@ export class UserResolver {
       }
     }
 
-    console.log('req.session.userId:', req.session.userId);
+    if (req.session) {
+      req.session.userId = user.id;
+    }
+    // console.log('Login mutation called');
+    // console.log('LOGIN SESSION ID:', req.sessionID);
+    // console.log('LOGIN SESSION:', req.session);
 
-    req.session.userId = user.id;
+    return { user };
+  }
+  @Mutation(() => UserResponse)
+  async login(
+    @Arg('usernameOrEmail') usernameOrEmail: string,
+    @Arg('password') password: string,
+    @Ctx() context: MyContext,
+  ): Promise<UserResponse> {
+    const user = await User.findOne(
+      usernameOrEmail.includes('@')
+        ? { where: { email: usernameOrEmail } }
+        : { where: { username: usernameOrEmail } },
+    );
+
+    if (!user) {
+      return {
+        errors: [
+          {
+            field: 'username',
+            message: 'Username or password is invalid.',
+          },
+        ],
+      };
+    }
+
+    const valid = await argon2.verify(user.password, password);
+
+    console.log('login mutation called');
+    console.log('user: ', user);
+
+    if (!valid) {
+      return {
+        errors: [
+          {
+            field: 'password',
+            message: "Username or password doesn't match.",
+          },
+        ],
+      };
+    }
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Your password validation would happen here.
+    if (context.req.session) {
+      context.req.session.userId = user.id;
+    }
+
+    console.log('Login mutation called');
+
+    context.req.session.userId = user.id;
+
+    console.log('===== LOGIN =====');
+    console.log('sessionID:', context.req.sessionID);
+    console.log('cookie header:', context.req.headers.cookie);
+    console.log('Session ID:', context.req.sessionID);
+    if (context.req.session) {
+      console.log('User ID:', context.req.session.userId);
+    }
 
     return { user };
   }
