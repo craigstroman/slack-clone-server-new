@@ -25,6 +25,7 @@ import { ChatMessageResolver } from './resolvers/ChatMessageResolver';
 import { ChatRoomResolver } from './resolvers/ChatRoomResolver';
 import { UserResolver } from './resolvers/UserResolver';
 import { pubSub } from './pubsub';
+import { authChecker } from './authChecker';
 
 const port = 9001;
 
@@ -39,6 +40,7 @@ async function main(): Promise<void> {
     resolvers: [HelloResolver, ChatMessageResolver, ChatRoomResolver, UserResolver],
     pubSub,
     validate: false,
+    authChecker,
   });
 
   const app = express();
@@ -56,6 +58,15 @@ async function main(): Promise<void> {
   const serverCleanup = useServer(
     {
       schema,
+      context: async (ctx): Promise<MyContext> => {
+        const request = ctx.extra.request;
+
+        console.log('WS cookie:', request.headers.cookie);
+
+        return {
+          userId: undefined,
+        };
+      },
       onConnect: () => {
         console.log('WebSocket client connected');
       },
@@ -120,10 +131,10 @@ async function main(): Promise<void> {
         disableTouch: true,
       }),
       cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
-        httpOnly: false,
+        httpOnly: true,
         sameSite: 'lax',
         secure: false,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
       },
       saveUninitialized: true,
       secret: secret,
@@ -133,13 +144,18 @@ async function main(): Promise<void> {
 
   app.use(
     '/graphql',
-    cors<cors.CorsRequest>(),
+    cors<cors.CorsRequest>({
+      origin: `http://localhost:${port}`,
+      credentials: true,
+    }),
     express.json(),
     expressMiddleware(apolloServer, {
-      context: async ({ req, res }) => ({
-        req,
-        res,
-      }),
+      context: async ({ req, res }): Promise<MyContext> => {
+        return {
+          req,
+          res,
+        };
+      },
     }),
   );
 
