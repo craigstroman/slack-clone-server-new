@@ -1,3 +1,3 @@
-## Counter Subscriptions
+## Slack Clone Server
 
-A basic counter subscription using GraphQL.
+A Slack Clone server using GraphQL.
