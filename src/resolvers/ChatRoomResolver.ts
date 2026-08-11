@@ -1,15 +1,17 @@
-import { Arg, ID, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, ID, Mutation, Query, Resolver, Authorized } from 'type-graphql';
 
 import { AppDataSource } from '../database';
 import { ChatRoom } from '../entities/CHATROOM';
 
 @Resolver(() => ChatRoom)
 export class ChatRoomResolver {
+  @Authorized()
   @Query(() => [ChatRoom])
   async chatRooms() {
     return AppDataSource.getRepository(ChatRoom).find({ order: { createdAt: 'ASC' } });
   }
 
+  @Authorized()
   @Query(() => ChatRoom, {
     nullable: true,
   })
@@ -27,6 +29,7 @@ export class ChatRoomResolver {
     });
   }
 
+  @Authorized()
   @Mutation(() => ChatRoom)
   async createChatRoom(
     @Arg('name')
