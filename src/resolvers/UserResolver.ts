@@ -16,41 +16,10 @@ import argon2 from 'argon2';
 import dotenv from 'dotenv';
 import path from 'path';
 import { AppDataSource } from '../database';
-import { MyContext } from '../types';
+import { MyContext, UsernameRegisterInput, UserResponse } from '../types';
 import { User } from '../entities/USER';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
-
-@InputType()
-class UsernameRegisterInput {
-  @Field()
-  first_name: string;
-  @Field()
-  last_name: string;
-  @Field()
-  email: string;
-  @Field()
-  username: string;
-  @Field()
-  password: string;
-}
-
-@ObjectType()
-class FieldError {
-  @Field()
-  field: string;
-  @Field()
-  message: string;
-}
-
-@ObjectType()
-class UserResponse {
-  @Field(() => [FieldError], { nullable: true })
-  errors?: FieldError[];
-
-  @Field(() => User, { nullable: true })
-  user?: User;
-}
 
 @Resolver(User)
 export class UserResolver {
