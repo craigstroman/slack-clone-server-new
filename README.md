@@ -12,7 +12,7 @@ Based on the tutorial from https://awesomereact.com/playlists/slack-clone-using-
 - Run `npm install` or `yarn install` to install all required Node moduels.
 - Run `npm run live:server` or `yarn run live:server` to start server environment.
 - To create a production version run `npm run prod:server` or `yarn prod:server`.
-- <b>Note:</b> In the GraphQL query window turn on Include Cookies because I am using cookies for this.
+- <b>Note:</b> In the GraphQL query window turn on <b>Include Cookies</b> because I am using cookies for this.
 
 Note: This is a work in progress. I'm continuing to update this and add features.
 
